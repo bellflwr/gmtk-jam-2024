@@ -3,8 +3,14 @@ extends TileMapLayer
 var roads = {}
 var intersections = {}
 
-const SCALE = 2
+const SCALE = 15
 const MAP_SIZE = 20
+
+const ASPHALT = Vector2i(0, 0)
+const LINE_Y = Vector2i(1, 0)
+const LINE_X = Vector2i(2, 0)
+const INTERSECTION = Vector2i(3, 0)
+const CURB = Vector2i(0, 1)
 
 func make_pair_key(pos1: Vector2i, pos2: Vector2i):
 	if pos1.x > pos2.x:
@@ -33,6 +39,13 @@ func isnt_visited(pos: Vector2i):
 
 func get_unvisited_neighbors(pos: Vector2i):
 	return get_neighbors_in_bounds(pos).filter(isnt_visited)
+
+func simple_set_cell(pos: Vector2i, atlas_coords: Vector2i):
+	set_cell(pos, 1, atlas_coords, 0)
+	
+func set_cell_if_empty(pos: Vector2i, atlas_coords: Vector2i):
+	if get_cell_tile_data(pos) == null:
+		simple_set_cell(pos, atlas_coords)
 
 func generate_map():
 	for x in range(MAP_SIZE):
@@ -65,7 +78,9 @@ func generate_map():
 			intersections[chosen_cell] = true
 			stack.append(chosen_cell)
 		
-		
+	for i in range(roads.size()/4):
+		var key = roads.keys().pick_random()
+		roads[key] = true
 	
 		
 	for k in roads.keys():
@@ -76,11 +91,14 @@ func generate_map():
 		var pos2 = k[1]
 		
 		var atlas_coords
+		var p_offset
 		
 		if pos1.x == pos2.x:
-			atlas_coords = Vector2i(1, 0)
+			atlas_coords = LINE_Y
+			p_offset = Vector2i.LEFT
 		else:
-			atlas_coords = Vector2i(2, 0)
+			atlas_coords = LINE_X
+			p_offset = Vector2i.UP
 			
 		
 		var offset = pos2-pos1
@@ -88,13 +106,34 @@ func generate_map():
 		var start = pos1 * SCALE
 		var end = start + offset * SCALE
 		
-		for i in range(1, SCALE):
+		for i in range(SCALE+1):
 			var cell = start + offset * i
 			
-			set_cell(cell, 1, atlas_coords, 0)
+			var posa
 			
-		set_cell(start, 1, Vector2i(3, 0), 0)
-		set_cell(end, 1, Vector2i(3, 0), 0)
+			for j in range(1, 3+1):
+				posa = cell+p_offset*j
+				if get_cell_atlas_coords(posa) not in [LINE_X, LINE_Y, INTERSECTION]:
+					simple_set_cell(cell+p_offset*j, ASPHALT)
+				posa = cell-p_offset*j
+				if get_cell_atlas_coords(posa) not in [LINE_X, LINE_Y, INTERSECTION]:
+					simple_set_cell(cell-p_offset*j, ASPHALT)
+				
+			for j in range(4, 6+1):
+				posa = cell+p_offset*j
+				if get_cell_atlas_coords(posa) not in [ASPHALT]:
+					set_cell_if_empty(cell+p_offset*j, CURB)
+				posa = cell+p_offset*j
+				if get_cell_atlas_coords(posa) not in [ASPHALT]:
+					set_cell_if_empty(cell-p_offset*j, CURB)
+					
+			simple_set_cell(cell, atlas_coords)
+				
+			
+		set_cell(start, 1, INTERSECTION, 0)
+		set_cell(end, 1, INTERSECTION, 0)
+		
+	
 			
 		
 			
