@@ -12,6 +12,9 @@ const LINE_X = Vector2i(2, 0)
 const INTERSECTION = Vector2i(3, 0)
 const CURB = Vector2i(0, 1)
 
+func wait(seconds: float) -> void:
+	await get_tree().create_timer(seconds).timeout
+
 func make_pair_key(pos1: Vector2i, pos2: Vector2i):
 	if pos1.x > pos2.x:
 		return [pos2, pos1]
@@ -47,7 +50,7 @@ func set_cell_if_empty(pos: Vector2i, atlas_coords: Vector2i):
 	if get_cell_tile_data(pos) == null:
 		simple_set_cell(pos, atlas_coords)
 
-func generate_map():
+func init_map():
 	for x in range(MAP_SIZE):
 		for y in range(MAP_SIZE):
 			var pos1 = Vector2i(x, y)
@@ -56,12 +59,11 @@ func generate_map():
 				var key = make_pair_key(pos1, pos2)
 				if key not in roads:
 					roads[key] = false
-					
+
+func recursive_backtrack():
 	var stack = []
 	
 	var init_cell = Vector2i(floor(MAP_SIZE/2), floor(MAP_SIZE/2))
-	
-	print(get_unvisited_neighbors(init_cell))
 	
 	intersections[init_cell] = true
 	stack.append(init_cell)
@@ -77,12 +79,40 @@ func generate_map():
 			roads[key] = true
 			intersections[chosen_cell] = true
 			stack.append(chosen_cell)
-		
+
+func open_random_roads():
 	for i in range(roads.size()/4):
 		var key = roads.keys().pick_random()
 		roads[key] = true
+
+func fill_rectangle(corner1: Vector2i, corner2: Vector2i, atlas_coords: Vector2i):
+	var width = abs(corner1.x-corner2.x) + 1
+	var height = abs(corner1.y-corner2.y) + 1
 	
-		
+	var left = min(corner1.x, corner2.x)
+	var top = min(corner1.y, corner2.y)
+
+	var topleft = Vector2i(left, top)
+
+	for x in range(width):
+		for y in range(height):
+			var offset = Vector2i(x, y)
+			simple_set_cell(topleft+offset, atlas_coords)
+			
+func fill_rectangle_centered(center: Vector2i, radius: int, atlas_coords: Vector2i):
+	var offset = Vector2i(radius, radius)
+	var topleft = center - offset
+	var bottomright = center + offset
+	fill_rectangle(topleft, bottomright, atlas_coords)
+
+func generate_tilemap():
+	for i in intersections.keys():
+		var cell = i * SCALE
+		fill_rectangle_centered(cell, 6, CURB)
+		fill_rectangle_centered(cell, 3, ASPHALT)
+	
+	await wait(3)
+	
 	for k in roads.keys():
 		if not roads[k]:
 			continue
@@ -132,22 +162,14 @@ func generate_map():
 			
 		set_cell(start, 1, INTERSECTION, 0)
 		set_cell(end, 1, INTERSECTION, 0)
-		
-	
-			
-		
-			
-			
-				
-				
+
+func generate_map():
+	init_map()	
+	recursive_backtrack()
+	open_random_roads()
+	generate_tilemap()
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	generate_map()
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	#if Input.is_action_pressed()
-	pass
+	

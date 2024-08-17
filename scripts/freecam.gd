@@ -1,24 +1,22 @@
 extends Camera2D
 
-
 const CAM_SPEED = 100
+const ZOOM_BASE = 4
+const MIN_ZOOM = 0.2
+const MAX_ZOOM = 5
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
+var scalar_zoom: float = 5
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var dir = Vector2()
-	
-	if Input.is_action_pressed("up"):
-		dir += Vector2.UP
-	if Input.is_action_pressed("down"):
-		dir += Vector2.DOWN
-	if Input.is_action_pressed("left"):
-		dir += Vector2.LEFT
-	if Input.is_action_pressed("right"):
-		dir += Vector2.RIGHT
+	var dir = Input.get_vector("left", "right", "up", "down")
 		
-	position += dir.normalized() * delta * CAM_SPEED
+	position += dir * delta * CAM_SPEED / (scalar_zoom / MAX_ZOOM)
+
+	var zoom_dir = Input.get_axis("look_down", "look_up")
+	
+	var new_scalar_zooom = scalar_zoom * pow(ZOOM_BASE, zoom_dir * delta)
+	
+	scalar_zoom = clamp(new_scalar_zooom, MIN_ZOOM, MAX_ZOOM)
+	
+	zoom = Vector2.ONE * scalar_zoom
