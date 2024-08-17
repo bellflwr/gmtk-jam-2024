@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://c3hn74k1xwy0e"]
+
+[ext_resource type="Script" path="res://Scenes/player_bot.gd" id="1_kkh4j"]
+[ext_resource type="Texture2D" uid="uid://did4f2uuyw6yl" path="res://images/RoboSprite.png" id="2_oy32q"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2xyql"]
+size = Vector2(8, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjb0t"]
+atlas = ExtResource("2_oy32q")
+region = Rect2(0, 0, 22, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1fh6t"]
+atlas = ExtResource("2_oy32q")
+region = Rect2(0, 0, 22, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rpn3n"]
+atlas = ExtResource("2_oy32q")
+region = Rect2(22, 0, 22, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wgced"]
+atlas = ExtResource("2_oy32q")
+region = Rect2(44, 0, 22, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8q3n"]
+atlas = ExtResource("2_oy32q")
+region = Rect2(66, 0, 22, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nxgcq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjb0t")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_1fh6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rpn3n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wgced")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s8q3n")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="PlayerBot" type="CharacterBody2D"]
+script = ExtResource("1_kkh4j")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = -1.5708
+shape = SubResource("RectangleShape2D_2xyql")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, 1)
+rotation = -1.5708
+sprite_frames = SubResource("SpriteFrames_nxgcq")
+animation = &"walk"
+frame_progress = 0.872183
