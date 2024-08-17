@@ -2,7 +2,7 @@
 
 [ext_resource type="TileSet" uid="uid://s0vyjrb2nmhn" path="res://textures/world/tile_set.tres" id="1_b2hfv"]
 [ext_resource type="Script" path="res://scripts/map_generator.gd" id="2_gtxh3"]
-[ext_resource type="Script" path="res://scripts/freecam.gd" id="3_wa5lk"]
+[ext_resource type="PackedScene" uid="uid://bkrsddom2vkh" path="res://scenes/player_bot.tscn" id="3_lgsyi"]
 
 [node name="TestWorld" type="Node2D"]
 
@@ -11,6 +11,5 @@ texture_filter = 1
 tile_set = ExtResource("1_b2hfv")
 script = ExtResource("2_gtxh3")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(5, 5)
-script = ExtResource("3_wa5lk")
+[node name="PlayerBot" parent="." instance=ExtResource("3_lgsyi")]
+position = Vector2(10, 30)

@@ -111,8 +111,6 @@ func generate_tilemap():
 		fill_rectangle_centered(cell, 6, CURB)
 		fill_rectangle_centered(cell, 3, ASPHALT)
 	
-	await wait(3)
-	
 	for k in roads.keys():
 		if not roads[k]:
 			continue
