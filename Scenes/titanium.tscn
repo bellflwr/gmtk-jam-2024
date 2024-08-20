@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://2bu70jn7gtkt"]
+
+[ext_resource type="Script" path="res://scripts/titanium.gd" id="1_t0rvh"]
+[ext_resource type="Texture2D" uid="uid://do4d8skvsvpm1" path="res://images/titanium.png" id="2_nt2de"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k7erd"]
+size = Vector2(10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_htijp"]
+atlas = ExtResource("2_nt2de")
+region = Rect2(0, 0, 22, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u260h"]
+atlas = ExtResource("2_nt2de")
+region = Rect2(22, 0, 22, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_f65d2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_htijp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u260h")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="titanium" type="Area2D"]
+script = ExtResource("1_t0rvh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 0)
+shape = SubResource("RectangleShape2D_k7erd")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_f65d2")
+frame_progress = 0.261676
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://gb6qk4s0cdei"]
+[gd_scene load_steps=5 format=3 uid="uid://gb6qk4s0cdei"]
 
-[ext_resource type="Script" path="res://test_world.gd" id="1_avyai"]
+[ext_resource type="Script" path="res://scripts/test_world.gd" id="1_avyai"]
+[ext_resource type="PackedScene" uid="uid://c3a3g5h2xqdi8" path="res://Scenes/copper.tscn" id="2_cqyhw"]
+[ext_resource type="PackedScene" uid="uid://ck6y13d3tl5p6" path="res://Scenes/iron.tscn" id="3_l2sww"]
+[ext_resource type="PackedScene" uid="uid://2bu70jn7gtkt" path="res://Scenes/titanium.tscn" id="4_x02qt"]
 
 [node name="test_world" type="Node2D"]
 script = ExtResource("1_avyai")
@@ -46,3 +49,11 @@ offset_top = 3.0
 offset_right = 220.0
 offset_bottom = 43.0
 color = Color(1, 0, 0, 1)
+
+[node name="materials" type="Node" parent="."]
+
+[node name="copper" parent="materials" instance=ExtResource("2_cqyhw")]
+
+[node name="iron" parent="materials" instance=ExtResource("3_l2sww")]
+
+[node name="titanium" parent="materials" instance=ExtResource("4_x02qt")]
