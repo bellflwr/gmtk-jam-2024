@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ck6y13d3tl5p6"]
+
+[ext_resource type="Script" path="res://scripts/iron.gd" id="1_gn02k"]
+[ext_resource type="Texture2D" uid="uid://7vct8x4xklws" path="res://images/Iron.png" id="1_ld8kh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n51hg"]
+size = Vector2(10, 7)
+
+[node name="iron" type="Area2D"]
+script = ExtResource("1_gn02k")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_ld8kh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_n51hg")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
