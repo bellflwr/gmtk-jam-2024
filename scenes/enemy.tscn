@@ -1,0 +1,69 @@
+[gd_scene load_steps=13 format=3 uid="uid://yp78egnt7aig"]
+
+[ext_resource type="SpriteFrames" uid="uid://t4udgiw5qa3x" path="res://images/robo_sprite_frames.tres" id="1_1xwjl"]
+[ext_resource type="Script" path="res://scripts/enemy_controller.gd" id="1_6a02a"]
+[ext_resource type="PackedScene" uid="uid://bbtec7yg6fh6x" path="res://scenes/components/health.tscn" id="2_2ejo6"]
+[ext_resource type="PackedScene" uid="uid://bownvmepjxoww" path="res://scenes/health_bar.tscn" id="3_0i4k2"]
+[ext_resource type="Script" path="res://scripts/health_bar.gd" id="4_5solf"]
+[ext_resource type="PackedScene" uid="uid://bfsswt0pv654l" path="res://scenes/components/hitbox.tscn" id="5_jtwlr"]
+[ext_resource type="PackedScene" uid="uid://1mrv4ge45jov" path="res://scenes/components/vision_field.tscn" id="5_wsppq"]
+[ext_resource type="PackedScene" uid="uid://bwcnhd2xwrqn1" path="res://scenes/hitscan_weapon.tscn" id="6_mk78w"]
+[ext_resource type="Script" path="res://scripts/hitscan_weapon_type.gd" id="7_7taxg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0ys4j"]
+radius = 6.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y10co"]
+size = Vector2(9, 12)
+
+[sub_resource type="Resource" id="Resource_cvcq1"]
+script = ExtResource("7_7taxg")
+damage = 1.0
+is_automatic = true
+burst_interval = 0.2
+shot_interval = 0.0
+shots_per_burst = 1
+pellets = 0
+precision = 0.0
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 9
+motion_mode = 1
+script = ExtResource("1_6a02a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_0ys4j")
+
+[node name="Health" parent="." node_paths=PackedStringArray("health_bar") instance=ExtResource("2_2ejo6")]
+health_bar = NodePath("../HealthBar")
+
+[node name="HealthBar" parent="." instance=ExtResource("3_0i4k2")]
+script = ExtResource("4_5solf")
+
+[node name="SpritePivot" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SpritePivot"]
+unique_name_in_owner = true
+texture_filter = 1
+position = Vector2(0, 1)
+rotation = -1.5708
+sprite_frames = ExtResource("1_1xwjl")
+animation = &"idle"
+
+[node name="Hitbox" parent="SpritePivot" instance=ExtResource("5_jtwlr")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpritePivot/Hitbox"]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_y10co")
+
+[node name="VisionField" parent="SpritePivot" instance=ExtResource("5_wsppq")]
+
+[node name="HitscanWeapon" parent="." instance=ExtResource("6_mk78w")]
+range = 75.0
+weapon = SubResource("Resource_cvcq1")
+
+[connection signal="health_changed" from="Health" to="HealthBar" method="_on_health_health_changed"]
+[connection signal="damage_taken" from="SpritePivot/Hitbox" to="Health" method="_on_hitbox_damage_taken"]
+[connection signal="body_entered" from="SpritePivot/VisionField" to="." method="_on_vision_field_body_entered"]

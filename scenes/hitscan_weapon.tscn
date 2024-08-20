@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwcnhd2xwrqn1"]
+
+[ext_resource type="Script" path="res://scripts/hitscan_weapon.gd" id="1_y031r"]
+[ext_resource type="Script" path="res://scripts/hitscan_weapon_type.gd" id="2_rnwcl"]
+[ext_resource type="AudioStream" uid="uid://cswwbptbxd8ss" path="res://audio/sfx/gunshot_1.wav" id="2_vd5gd"]
+
+[sub_resource type="Resource" id="Resource_fbuc3"]
+script = ExtResource("2_rnwcl")
+damage = 1.0
+is_automatic = true
+burst_interval = 0.5
+shot_interval = 0.05
+shots_per_burst = 3
+pellets = 0
+precision = 0.0
+
+[node name="HitscanWeapon" type="RayCast2D"]
+collision_mask = 6
+collide_with_areas = true
+script = ExtResource("1_y031r")
+weapon = SubResource("Resource_fbuc3")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_vd5gd")

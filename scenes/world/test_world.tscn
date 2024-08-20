@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://y85k8g1pc1tt"]
+[gd_scene load_steps=8 format=3 uid="uid://y85k8g1pc1tt"]
 
 [ext_resource type="TileSet" uid="uid://s0vyjrb2nmhn" path="res://textures/world/tile_set.tres" id="1_b2hfv"]
 [ext_resource type="Script" path="res://scripts/map_generator.gd" id="2_gtxh3"]
 [ext_resource type="PackedScene" uid="uid://bkrsddom2vkh" path="res://scenes/player_bot.tscn" id="3_lgsyi"]
+[ext_resource type="PackedScene" uid="uid://yp78egnt7aig" path="res://scenes/enemy.tscn" id="4_41wx2"]
+[ext_resource type="Script" path="res://scripts/collectible.gd" id="5_eoujx"]
+[ext_resource type="Texture2D" uid="uid://dk8yapgct1pom" path="res://textures/items/copperingot.png" id="6_4t5qp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dw8yh"]
+radius = 5.0
 
 [node name="TestWorld" type="Node2D"]
 
@@ -13,3 +19,19 @@ script = ExtResource("2_gtxh3")
 
 [node name="PlayerBot" parent="." instance=ExtResource("3_lgsyi")]
 position = Vector2(10, 30)
+
+[node name="Enemy" parent="." instance=ExtResource("4_41wx2")]
+
+[node name="Collectible" type="Area2D" parent="."]
+position = Vector2(46, 0)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("5_eoujx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collectible"]
+shape = SubResource("CircleShape2D_dw8yh")
+
+[node name="Sprite2D" type="Sprite2D" parent="Collectible"]
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("6_4t5qp")

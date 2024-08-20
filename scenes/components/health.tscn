@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbtec7yg6fh6x"]
+
+[ext_resource type="Script" path="res://scripts/health.gd" id="1_j63mq"]
+
+[node name="Health" type="Node2D" node_paths=PackedStringArray("health_bar")]
+script = ExtResource("1_j63mq")
+health_bar = NodePath("")
